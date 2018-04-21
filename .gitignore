@@ -1,3 +1,9 @@
 .DS_Store
 *.code-workspace
+
+# Python
+__pycache__
+
+# Environments
 venv
+.flaskenv
