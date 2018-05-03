@@ -12,4 +12,4 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 # import routes at bottom to prevent circular module importing
-from app import routes, models
+from app import routes, models, errors
