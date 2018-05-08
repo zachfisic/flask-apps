@@ -3,23 +3,23 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
+from app.models import User, Post
 
-@app.route('/')
-@app.route('/index')
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-  posts = [
-    {
-      "author": {"username": "John"},
-      "body": "A simple test post"
-    },
-    {
-      "author": {"username": "Peter"},
-      "body": "Flask is awesome"
-    },
-  ]
+  form = PostForm()
+  if form.validate_on_submit():
+    post = Post(body=form.post.data, author=current_user)
+    db.session.add(post)
+    db.session.commit()
+    flash('Post added.')
+    return redirect(url_for('index'))
+  posts = current_user.followed_posts().all()
   return render_template('index.html', title='Home', posts=posts)
 
 
@@ -122,7 +122,7 @@ def follow(username):
 
 @app.route('/unfollow/<username>')
 @login_required
-def follow(username):
+def unfollow(username):
   user = User.query.filter_by(username=username).first()
   if user is None:
     flash('User {} not found.'.format(username))
