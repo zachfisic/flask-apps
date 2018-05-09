@@ -11,6 +11,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
   """Class for representing app settings."""
 
+  POSTS_PER_PAGE = 3
+  """int: pagination setting"""
+
   MAIL_SERVER = os.environ.get('MAIL_SERVER')
   """str: designated email server."""
 

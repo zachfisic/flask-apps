@@ -26,8 +26,13 @@ def index():
     db.session.commit()
     flash('Post added.')
     return redirect(url_for('index'))
-  posts = current_user.followed_posts().all()
-  return render_template('index.html', title='Home', posts=posts, form=form)
+  # handle pagination
+  page = request.args.get('page', 1, type=int)
+  posts = current_user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
+  next_url = url_for('index', page=posts.next_num) if posts.has_next else None
+  prev_url = url_for('index', page=posts.prev_num) if posts.has_prev else None
+  
+  return render_template('index.html', title='Home', posts=posts.items, form=form, next_url=next_url, prev_url=prev_url)
 
 
 
@@ -158,5 +163,10 @@ def unfollow(username):
 @login_required
 def explore():
   """Handle explore page logic"""
-  posts = Post.query.order_by(Post.timestamp.desc()).all()
-  return render_template('index.html', title='Explore', posts=posts)
+  # handle pagination
+  page = request.args.get('page', 1, type=int)
+  posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+  next_url = url_for('explore', page=posts.next_num) if posts.has_next else None
+  prev_url = url_for('explore', page=posts.prev_num) if posts.has_prev else None
+  
+  return render_template('index.html', title='Explore', posts=posts.items, next_url=next_url, prev_url=prev_url)
