@@ -1,3 +1,8 @@
+"""Forms management module
+
+Various classes for all forms used in the application
+
+"""
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
@@ -6,6 +11,7 @@ from app.models import User
 
 
 class LoginForm(FlaskForm):
+  """Build form for logging in to app. Subclass FlaskForm from Flask-WTF."""
   username = StringField('Username', validators=[DataRequired()])
   password = PasswordField('Password', validators=[DataRequired()])
   remember_me = BooleanField('Remember Me')
@@ -14,6 +20,7 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+  """Build form for registering on to app. Subclass FlaskForm from Flask-WTF"""
   username = StringField('Username', validators=[DataRequired()])
   email = StringField('Email', validators=[DataRequired(), Email()])
   password = PasswordField('Password', validators=[DataRequired()])
@@ -33,6 +40,7 @@ class RegistrationForm(FlaskForm):
 
 
 class EditProfileForm(FlaskForm):
+  """Build form for editing profile information. Subclass FlaskForm from Flask-WTF"""
   username = StringField('Username', validators=[DataRequired()])
   about_me = TextAreaField('About Me', validators=[Length(min=0,max=140)])
   submit = SubmitField('Submit')
@@ -50,6 +58,7 @@ class EditProfileForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
+  """Build generic form for posting text. Subclass FlaskForm from Flask-WTF"""
   post = TextAreaField(
     'Say something...',
     validators=[DataRequired(), Length(min=1, max=140)])

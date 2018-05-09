@@ -1,3 +1,9 @@
+"""Routing logic for URLs
+
+Determines action for paths taken in app.
+Utilizes decorators to associate a callback function to a route or set of routes.
+
+"""
 from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
@@ -12,6 +18,7 @@ from app.models import User, Post
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+  """Handle index page logic"""
   form = PostForm()
   if form.validate_on_submit():
     post = Post(body=form.post.data, author=current_user)
@@ -26,6 +33,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+  """Log user in"""
   if current_user.is_authenticated:
     return redirect(url_for('index'))
   form = LoginForm()
@@ -34,6 +42,7 @@ def login():
     if user is None or not user.check_password(form.password.data):
       flash('Invalid username or password')
       return redirect(url_for('login'))
+    # sets current_user once logged in
     login_user(user, remember=form.remember_me.data)
     next_page = request.args.get('next')
     if not next_page or url_parse(next_page).netloc != '':
@@ -45,6 +54,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+  """Log user out"""
   logout_user()
   return redirect(url_for('index'))
 
@@ -52,6 +62,7 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+  """Register user to app"""
   if current_user.is_authenticated:
     return redirect(url_for('index'))
   form = RegistrationForm()
@@ -69,6 +80,7 @@ def register():
 @app.route('/user/<username>')
 @login_required
 def user(username):
+  """Display user given by route param"""
   user = User.query.filter_by(username=username).first_or_404()
   posts = [
     { "author": user, "body": "Test Post No.1" },
@@ -81,6 +93,8 @@ def user(username):
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+  """Allow user to edit profile"""
+  # the profile form must validate a potential username change
   form = EditProfileForm(current_user.username)
   if form.validate_on_submit():
     current_user.username = form.username.data
@@ -97,6 +111,7 @@ def edit_profile():
 
 @app.before_request
 def before_request():
+  """Execute some logic before the app makes any request"""
   if current_user.is_authenticated:
     current_user.last_seen = datetime.utcnow()
     db.session.commit()
@@ -106,6 +121,7 @@ def before_request():
 @app.route('/follow/<username>')
 @login_required
 def follow(username):
+  """Follow a user given by a route param"""
   user = User.query.filter_by(username=username).first()
   if user is None:
     flash('User {} not found.'.format(username))
@@ -123,6 +139,7 @@ def follow(username):
 @app.route('/unfollow/<username>')
 @login_required
 def unfollow(username):
+  """Unfollow a user given by a route param"""
   user = User.query.filter_by(username=username).first()
   if user is None:
     flash('User {} not found.'.format(username))
@@ -137,8 +154,9 @@ def unfollow(username):
 
 
 
-  @app.route('/explore')
-  @login_required
-  def explore():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('index.html', title='Explore', posts=posts)
+@app.route('/explore')
+@login_required
+def explore():
+  """Handle explore page logic"""
+  posts = Post.query.order_by(Post.timestamp.desc()).all()
+  return render_template('index.html', title='Explore', posts=posts)

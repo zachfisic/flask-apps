@@ -1,3 +1,18 @@
+"""App package for Microblog tutorial
+
+TODO:
+  * Further documentation
+
+Modules:
+  app: instance of Flask
+  db: ORM via SQLAlchemy
+  migrate: Flask wrapper for Alembic database migrator
+  login: instance of login manager for handling login persistence
+  route: routing logic
+  models: database models for microblog
+  errors: error handling module
+"""
+
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask import Flask
@@ -7,13 +22,20 @@ from flask_login import LoginManager
 import os
 from config import Config
 
+# Instantiate Flask with the currently named module ("app")
+# The 'app' variable below is a member of 'app' package defined by this directory
 app = Flask(__name__)
+
+# Instantiate Config class from `config` module. Class variables exist on app.config
 app.config.from_object(Config)
+
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 
+# If not in debug mode...
 if not app.debug:
   # if app.config['MAIL_SERVER']:
   #   auth = None
@@ -42,5 +64,6 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Microblog startup')
 
-# import routes at bottom to prevent circular module importing
+# Import modules at bottom to prevent circular dependency
+# The 'app' variable defined in this file needs to be available for these modules
 from app import routes, models, errors

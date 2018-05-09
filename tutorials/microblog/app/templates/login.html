@@ -3,6 +3,7 @@
 {% block content %}
   <h1>Sign In</h1>
   <form method="post" action="" novalidate>
+    <!-- {# CSRF protection. SECRET_KEY should be defined for Flask app #}-->
     {{ form.hidden_tag() }}
     <p>
       {{ form.username.label }}<br>

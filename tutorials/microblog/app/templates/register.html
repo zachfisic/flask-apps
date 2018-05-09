@@ -3,6 +3,7 @@
 {% block content %}
   <h1>Register</h1>
   <form action="" method="POST">
+    <!-- {# CSRF protection. SECRET_KEY should be defined for Flask app #}-->
     {{ form.hidden_tag() }}
     <p>
       {{ form.username.label }}
