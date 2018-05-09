@@ -20,7 +20,7 @@ def index():
     flash('Post added.')
     return redirect(url_for('index'))
   posts = current_user.followed_posts().all()
-  return render_template('index.html', title='Home', posts=posts)
+  return render_template('index.html', title='Home', posts=posts, form=form)
 
 
 
@@ -134,3 +134,11 @@ def unfollow(username):
   db.session.commit()
   flash('Following {}'.format(username))
   return redirect(url_for('user', username=username))
+
+
+
+  @app.route('/explore')
+  @login_required
+  def explore():
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', title='Explore', posts=posts)
