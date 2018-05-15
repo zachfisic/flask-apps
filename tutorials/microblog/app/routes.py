@@ -111,7 +111,7 @@ def reset_password(token):
     user.set_password(form.password.data)
     db.session.commit()
     flash('Password has been reset')
-    return redirect(url_for('login')
+    return redirect(url_for('login'))
   return render_template('reset_password.html', form=form)
 
 

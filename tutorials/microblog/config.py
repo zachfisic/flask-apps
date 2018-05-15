@@ -23,6 +23,9 @@ class Config(object):
   MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
   """bool: TLS setting."""
 
+  MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL') is not None
+  """bool: SSL setting."""
+
   MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
   """str: designated email username."""
 
