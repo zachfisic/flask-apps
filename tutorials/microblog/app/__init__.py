@@ -2,27 +2,17 @@
 
 TODO:
   * Further documentation
-
-Modules:
-  app: instance of Flask
-  db: ORM via SQLAlchemy
-  migrate: Flask wrapper for Alembic database migrator
-  login: instance of login manager for handling login persistence
-  route: routing logic
-  models: database models for microblog
-  errors: error handling module
-  mail: mail router
 """
-
+import os
 import logging
+from config import Config
 from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask import Flask
+from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_login import LoginManager
-import os
-from config import Config
 
 # Instantiate Flask with the currently named module ("app")
 # The 'app' variable below is a member of 'app' package defined by this directory
@@ -31,6 +21,7 @@ app = Flask(__name__)
 # Instantiate Config class from `config` module. Class variables exist on app.config
 app.config.from_object(Config)
 
+bootstrap = Bootstrap(app)
 mail = Mail(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
