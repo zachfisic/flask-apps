@@ -13,6 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_moment import Moment
 
 # Instantiate Flask with the currently named module ("app")
 # The 'app' variable below is a member of 'app' package defined by this directory
@@ -22,6 +23,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 bootstrap = Bootstrap(app)
+moment = Moment(app)
 mail = Mail(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
