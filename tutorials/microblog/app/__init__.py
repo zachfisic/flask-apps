@@ -2,12 +2,14 @@
 
 TODO:
   * Further documentation
+  * Translations
 """
 import os
 import logging
 from config import Config
 from logging.handlers import SMTPHandler, RotatingFileHandler
-from flask import Flask
+from flask import Flask, request
+from flask_babel import Babel, lazy_gettext as _l
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
@@ -22,6 +24,7 @@ app = Flask(__name__)
 # Instantiate Config class from `config` module. Class variables exist on app.config
 app.config.from_object(Config)
 
+babel = Babel(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 mail = Mail(app)
@@ -29,6 +32,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
+login.login_message = _l('Please log in to access this page.')
+
+@babel.localeselector
+def get_locale():
+  return request.accept_languages.best_matchup(app.config['LANGUAGES'])
 
 # If not in debug mode...
 if not app.debug:
