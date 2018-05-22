@@ -16,7 +16,6 @@ def update():
   os.remove('messages.pot')
 
 
-
 @translate.command()
 def compile():
   """Compile all languages."""

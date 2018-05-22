@@ -11,7 +11,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
   """Class for representing app settings."""
 
-  LANGUAGES = ['en', 'es']
+  LANGUAGES = ['en_US', 'es_ES']
   """list: translated languages"""
 
   POSTS_PER_PAGE = 3
