@@ -3,6 +3,7 @@
 TODO:
   * Further documentation
   * Translations
+  * Language guessing
 """
 import os
 import logging
