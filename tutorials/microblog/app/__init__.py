@@ -68,6 +68,10 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Microblog startup')
 
+# Register Blueprints
+from app.errors import bp as errors_bp
+app.register_blueprint(errors_bp)
+
 # Import modules at bottom to prevent circular dependency
 # The 'app' variable defined in this file needs to be available for these modules
-from app import routes, models, errors
+from app import routes, models
