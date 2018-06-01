@@ -11,6 +11,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
   """Class for representing app settings."""
 
+  ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+  """str: connection URL for ElasticSearch"""
+
   LANGUAGES = ['en_US', 'es_ES']
   """list: translated languages"""
 

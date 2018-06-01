@@ -19,6 +19,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_moment import Moment
+from elasticsearch import Elasticsearch
 
 # Create instances for all extensions
 db = SQLAlchemy()
@@ -40,6 +41,9 @@ def create_app(config_class=Config):
   # Instantiate Config class from `config` module. Class variables exist on app.config
   app.config.from_object(Config)
   
+  # Add elasticsearch
+  app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) if app.config['ELASTICSEARCH_URL'] else None
+
   # Initialize extensions with app instance
   db.init_app(app)
   mail.init_app(app)
